@@ -15,7 +15,7 @@
 
 ## Docs
 
-Documentation for the project are in `docs/project`
+Documentation/files useful for the project are in `docs/project`
 
 ## License
 

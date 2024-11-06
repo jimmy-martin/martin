@@ -60,5 +60,7 @@ sf: ## List all Symfony commands or pass the parameter "c=" to run a given comma
 cc: c=c:c ## Clear the cache
 cc: sf
 
-php-cs-fixer: ## Apply all PHP CS FIXER fixes in src folder
+## -- Code Quality ✨———————————————————————————————————————————————————————————
+
+fix-php-cs-fixer: ## Apply all PHP CS FIXER fixes in src folder
 	@$(VENDOR)/php-cs-fixer fix src --verbose --diff --allow-risky yes
