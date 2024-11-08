@@ -4,18 +4,21 @@
 
 1. Si ce n'est pas déjà fait, [installez Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)
 2. Exécutez `make start` afin de lancer le projet
-
-1. If not already done, [install Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)
-2. Run `docker compose build --no-cache` to build fresh images
-3. Run `docker compose up --pull always -d --wait` to set up and start a fresh Symfony project
-4. Open `http://localhost:8080` in your favorite web browser
-5. Run `docker compose down --remove-orphans` to stop the Docker containers.
+3. Exécutez `make sf c='doctrine:fixtures:load'` afin de charger les données de test
+4. Ouvrez `http://localhost:8080/api` pour afficher la documentation de l'API
+5. Exécutez `docker compose down --remove-orphans` pour arrêter les conteneurs Docker.
 
 **Enjoy!**
 
-## Docs
+## Détails
 
-Documentation/files useful for the project are in `docs/project`
+Le MCD et le sql se trouvent dans le dossier `docs/project` 
+
+- Deux variables d'env `MAX_CREATED_USERS` et `MAX_CREATED_PARTIES` 
+sont disponibles pour gérer la quantité de données à générer lors de l'exécution des fixtures.
+- Je n'ai pas eu le temps d'implémenter les partitions,
+mais j'ai laissé le SQL comme si je voulais les créer (perte du code quelques temps avant remise du projet)
+- 
 
 ## License
 
