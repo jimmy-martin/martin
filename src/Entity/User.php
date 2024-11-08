@@ -4,7 +4,10 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -14,6 +17,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ApiResource]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use TimestampableEntity;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -46,6 +51,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Address $address = null;
 
+    /**
+     * @var Collection<int, Party>
+     */
+    #[ORM\ManyToMany(targetEntity: Party::class, mappedBy: 'participants')]
+    private Collection $attendingParties;
+
+    /**
+     * @var Collection<int, Party>
+     */
+    #[ORM\OneToMany(targetEntity: Party::class, mappedBy: 'createdBy', orphanRemoval: true)]
+    private Collection $createdParties;
+
+    /**
+     * @var Collection<int, Interest>
+     */
+    #[ORM\ManyToMany(targetEntity: Interest::class)]
+    private Collection $interests;
+
+    public function __construct()
+    {
+        $this->attendingParties = new ArrayCollection();
+        $this->createdParties = new ArrayCollection();
+        $this->interests = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +106,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @see UserInterface
+     *
      * @return list<string>
      */
     public function getRoles(): array
@@ -164,6 +196,87 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAddress(?Address $address): static
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Party>
+     */
+    public function getAttendingParties(): Collection
+    {
+        return $this->attendingParties;
+    }
+
+    public function addAttendingParty(Party $attendingParty): static
+    {
+        if (!$this->attendingParties->contains($attendingParty)) {
+            $this->attendingParties->add($attendingParty);
+            $attendingParty->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAttendingParty(Party $attendingParty): static
+    {
+        if ($this->attendingParties->removeElement($attendingParty)) {
+            $attendingParty->removeParticipant($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Party>
+     */
+    public function getCreatedParties(): Collection
+    {
+        return $this->createdParties;
+    }
+
+    public function addCreatedParty(Party $createdParty): static
+    {
+        if (!$this->createdParties->contains($createdParty)) {
+            $this->createdParties->add($createdParty);
+            $createdParty->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCreatedParty(Party $createdParty): static
+    {
+        if ($this->createdParties->removeElement($createdParty)) {
+            // set the owning side to null (unless already changed)
+            if ($createdParty->getCreatedBy() === $this) {
+                $createdParty->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Interest>
+     */
+    public function getInterests(): Collection
+    {
+        return $this->interests;
+    }
+
+    public function addInterest(Interest $interest): static
+    {
+        if (!$this->interests->contains($interest)) {
+            $this->interests->add($interest);
+        }
+
+        return $this;
+    }
+
+    public function removeInterest(Interest $interest): static
+    {
+        $this->interests->removeElement($interest);
 
         return $this;
     }

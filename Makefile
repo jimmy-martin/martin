@@ -60,6 +60,16 @@ sf: ## List all Symfony commands or pass the parameter "c=" to run a given comma
 cc: c=c:c ## Clear the cache
 cc: sf
 
+reset-db: ## Reset the database
+	@$(SYMFONY) d:d:d --force
+	@$(SYMFONY) d:d:c
+	@$(SYMFONY) d:mi:mi --no-interaction
+	@$(SYMFONY) d:f:l --no-interaction
+
+clear-db: ## Clear the database
+	@$(SYMFONY) d:d:d --force
+	@$(SYMFONY) d:d:c
+
 ## -- Code Quality ✨———————————————————————————————————————————————————————————
 
 fix-php-cs-fixer: ## Apply all PHP CS FIXER fixes in src folder

@@ -1,9 +1,9 @@
 # Symfony Docker
 
+## Lancer le projet
 
-![CI](https://github.com/dunglas/symfony-docker/workflows/CI/badge.svg)
-
-## Getting Started
+1. Si ce n'est pas déjà fait, [installez Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)
+2. Exécutez `make start` afin de lancer le projet
 
 1. If not already done, [install Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)
 2. Run `docker compose build --no-cache` to build fresh images
